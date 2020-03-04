@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframeworrk.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- 1.配置Handle，映射"\hello"请求 -->
+	<!-- <bean name="/hello" class="org.fkit.controller.HelloController" /> -->
+
+	<!-- 2.处理器映射器将bean的name作为url进行查找，需要在配置Handle时指定name（即url） -->
+	<!-- <bean class="org.spring.framework.web.servlet.mvc.SimpleControllerHandleAdapter" />-->
+	<!-- 3.SimpleControllerHandlerAdapter是一个处理器适配器，所有处理器适配器都要事先HandlerAdapter接口 -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandleAdapter" />-->
+	<!-- 4.视图解释器 -->
+	<!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" />-->
+	
+	<!-- spring自动扫描base-pack下面的包或者子包下面的java文件，
+	如果扫描到有Spring相关的注解的类，则把这些类注册为Spring的bean -->
+	<context:component-scan base-package="org.fkit.controller"/>
+	<!-- 默认装配方案 -->
+	<mvc:annotation-driven/>
+	<!-- 静态资源处理 -->
+	<mvc:default-servlet-handler/>
+	
+
+	<!-- 视图解析器 prefix属性表示前缀  suffix属性表示后缀 -->
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="WEB-INF/content/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    
+    <!-- 告诉SpringMVC国际化的属性文件保存在哪里 -->
+	<bean id="messageSource"
+			class="org.springframework.context.support.ResourceBundleMessageSource"  >
+			<property name="basenames" value="messages"/>
+
+			<property name="defaultEncoding" value="UTF-8"/>
+	</bean>
+	<mvc:interceptors>
+		<!-- 国际化操作拦截器如果采用基于（session/cookie）则必须配置 -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
+	<!-- AcceptHeaderLocaleResolver配置，因为AcceptHeaderLocaleResolver事默认语言区域解析器，
+	不配置也可以 -->
+	 <!-- <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"/>  -->
+	<!-- SessionLocaleResolver配置 -->
+	<!--  <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver"/> -->
+	<!-- CookieLocaleResolver配置 -->
+	 <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver"/> 
+	
+</beans>
